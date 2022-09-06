@@ -61,9 +61,9 @@ Source/Utility/port.cpp
 )
 
 
-set_target_properties(DaisySP PROPERTIES PUBLIC
-  CXX_STANDARD 14 
-  CXX_STANDARD_REQUIRED
+set_target_properties(DaisySP PROPERTIES
+  CXX_STANDARD 14
+  CXX_STANDARD_REQUIRED ON
   )
 
 
@@ -81,3 +81,5 @@ target_include_directories(DaisySP PUBLIC
   "Source/Synthesis"
   "Source/Utility"
   )
+
+  install(TARGETS DaisySP)

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
+
 project(DAISYSP VERSION 0.0.1)
 
 add_library(DaisySP STATIC 

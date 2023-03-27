@@ -6,22 +6,18 @@ using namespace daisysp;
 
 void Phasor::SetFreq(float freq)
 {
-    freq_ = freq;
-    inc_  = (TWOPI_F * freq_) / sample_rate_;
+    freq_ = fmax(freq, 0.0f);
+    inc_  = freq_ / sample_rate_;
 }
 
 float Phasor::Process()
 {
     float out;
-    out = phs_ / TWOPI_F;
+    out = phs_;
     phs_ += inc_;
-    if(phs_ > TWOPI_F)
+    if(phs_ > 1.0f)
     {
-        phs_ -= TWOPI_F;
-    }
-    if(phs_ < 0.0f)
-    {
-        phs_ = 0.0f;
+        phs_ -= 1.0f;
     }
     return out;
 }

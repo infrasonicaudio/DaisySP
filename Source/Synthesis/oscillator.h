@@ -59,6 +59,7 @@ class Oscillator
         waveform_  = WAVE_SIN;
         eoc_       = true;
         eor_       = true;
+        phs_offset_ = 0.f;
     }
 
 
@@ -112,6 +113,8 @@ class Oscillator
     */
     void Reset(float _phase = 0.0f) { phase_ = _phase; }
 
+    void PhaseOffset(float offset) { phs_offset_ = offset; }
+
   private:
     float   CalcPhaseInc(float f);
     uint8_t waveform_;
@@ -119,6 +122,7 @@ class Oscillator
     float   sr_, sr_recip_, phase_, phase_inc_;
     float   last_out_, last_freq_;
     bool    eor_, eoc_;
+    float   phs_offset_;
 };
 } // namespace daisysp
 #endif

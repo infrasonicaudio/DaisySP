@@ -57,6 +57,9 @@ class Phasor
     */
     void SetFreq(float freq);
 
+    /** Resets phs to 0 */
+    inline void Reset() { phs_ = 0.f; }
+
 
     /** Returns current frequency value in Hz
     */

@@ -31,6 +31,14 @@ void Svf::Init(float sample_rate)
 void Svf::Process(float in)
 {
     input_ = in;
+
+    /** Test floats for NaN */
+    TestFloat(low_);
+    TestFloat(high_);
+    TestFloat(band_);
+    TestFloat(peak_);
+    TestFloat(notch_);
+
     // first pass
     notch_ = input_ - damp_ * band_;
     low_   = low_ + freq_ * band_;

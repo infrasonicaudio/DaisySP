@@ -1,3 +1,11 @@
+/*
+Copyright (c) 2020 Electrosmith, Corp, Emilie Gillet
+
+Use of this source code is governed by an MIT-style
+license that can be found in the LICENSE file or at
+https://opensource.org/licenses/MIT.
+*/
+
 #pragma once
 #ifndef DSY_SR_REDUCER_H
 #define DSY_SR_REDUCER_H
@@ -32,7 +40,7 @@ class SampleRateReducer
     float Process(float in);
 
     /** Set the new sample rate.
-        \param Works over 0-1. 1 is full quality, .5 is half sample rate, etc.
+        \param frequency over 0-1. 1 is full quality, .5 is half sample rate, etc.
     */
     void SetFreq(float frequency);
 

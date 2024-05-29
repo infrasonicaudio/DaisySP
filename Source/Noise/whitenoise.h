@@ -1,3 +1,11 @@
+/*
+Copyright (c) 2020 Electrosmith, Corp
+
+Use of this source code is governed by an MIT-style
+license that can be found in the LICENSE file or at
+https://opensource.org/licenses/MIT.
+*/
+
 #pragma once
 #ifndef DSY_WHITENOISE_H
 #define DSY_WHITENOISE_H
@@ -32,6 +40,9 @@ class WhiteNoise
         randseed_ *= 16807;
         return (randseed_ * coeff_) * amp_;
     }
+
+    /** sets the seed (and corrects a seed of 0 to 1) */
+    inline void SetSeed(int32_t s) { randseed_ = s == 0 ? 1 : s; }
 
   private:
     static constexpr float coeff_ = 4.6566129e-010f;

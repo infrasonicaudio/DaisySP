@@ -3,15 +3,14 @@ TARGET = libdaisysp
 MODULE_DIR = Source
 
 # Each Module Directory is listed below with it's modules.
-# Header only modules are listed commented out 
+# Header only modules are listed commented out
 # below the others.
 
 CONTROL_MOD_DIR = Control
 CONTROL_MODULES = \
 adenv \
 adsr \
-line \
-phasor
+phasor \
 
 DRUM_MOD_DIR = Drums
 DRUM_MODULES = \
@@ -19,66 +18,51 @@ analogbassdrum \
 analogsnaredrum \
 hihat \
 synthbassdrum \
-synthsnaredrum
+synthsnaredrum \
 
 DYNAMICS_MOD_DIR = Dynamics
 DYNAMICS_MODULES = \
-balance \
-compressor \
 crossfade \
-limiter 
+limiter \
 
 EFFECTS_MOD_DIR = Effects
 EFFECTS_MODULES = \
 autowah \
-bitcrush \
 chorus \
 decimator \
 flanger \
-fold \
 overdrive \
 phaser \
-reverbsc \
 sampleratereducer \
 tremolo \
-wavefolder
-#pitchshifter 
+wavefolder \
 
 FILTER_MOD_DIR = Filters
 FILTER_MODULES = \
-allpass \
-atone \
-biquad \
-comb \
-mode \
-moogladder \
-nlfilt \
+ladder \
 svf \
-tone 
-#fir
+soap \
 
 NOISE_MOD_DIR = Noise
 NOISE_MODULES = \
 clockednoise \
 grainlet \
-particle 
-#dust 
-#fractal_noise 
-#whitenoise
+particle \
 
 PHYSICAL_MODELING_MOD_DIR = PhysicalModeling
 PHYSICAL_MODELING_MODULES = \
 drip \
-modalvoice \
-pluck \
 KarplusString \
+modalvoice \
 resonator \
-stringvoice 
-#PolyPluck 
+stringvoice \
+
+SAMPLING_MOD_DIR = Sampling
+SAMPLING_MODULES = \
+granularplayer
 
 SYNTHESIS_MOD_DIR = Synthesis
 SYNTHESIS_MODULES = \
-blosc \
 fm2 \
 formantosc \
 oscillator \
@@ -86,21 +70,12 @@ oscillatorbank \
 variablesawosc \
 variableshapeosc \
 vosim \
-zoscillator 
-#harmonic_osc 
+zoscillator \
 
 UTILITY_MOD_DIR = Utility
 UTILITY_MODULES = \
 dcblock \
-jitter \
 metro \
-port 
-#delayline 
-#dsp 
-#looper
-#maytrig 
-#samplehold 
-#smooth_random
 
 ######################################
 # source
@@ -113,6 +88,7 @@ CPP_SOURCES += $(addsuffix .cpp, $(MODULE_DIR)/$(EFFECTS_MOD_DIR)/$(EFFECTS_MODU
 CPP_SOURCES += $(addsuffix .cpp, $(MODULE_DIR)/$(FILTER_MOD_DIR)/$(FILTER_MODULES))
 CPP_SOURCES += $(addsuffix .cpp, $(MODULE_DIR)/$(NOISE_MOD_DIR)/$(NOISE_MODULES))
 CPP_SOURCES += $(addsuffix .cpp, $(MODULE_DIR)/$(PHYSICAL_MODELING_MOD_DIR)/$(PHYSICAL_MODELING_MODULES))
+CPP_SOURCES += $(addsuffix .cpp, $(MODULE_DIR)/$(SAMPLING_MOD_DIR)/$(SAMPLING_MODULES))
 CPP_SOURCES += $(addsuffix .cpp, $(MODULE_DIR)/$(SYNTHESIS_MOD_DIR)/$(SYNTHESIS_MODULES))
 CPP_SOURCES += $(addsuffix .cpp, $(MODULE_DIR)/$(UTILITY_MOD_DIR)/$(UTILITY_MODULES))
 
@@ -131,6 +107,7 @@ OPT = -O3
 
 # Build path
 BUILD_DIR = build
+DAISYSP_LGPL_DIR = DaisySP-LGPL
 
 #######################################
 # binaries
@@ -180,11 +157,11 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 
 # macros for gcc
 # AS defines
-AS_DEFS = 
+AS_DEFS =
 
 # C defines
 C_DEFS =  \
--DSTM32H750xx 
+-DSTM32H750xx
 
 C_INCLUDES = \
 -I$(MODULE_DIR) \
@@ -196,7 +173,7 @@ C_INCLUDES = \
 -I$(MODULE_DIR)/$(NOISE_MOD_DIR) \
 -I$(MODULE_DIR)/$(PHYSICAL_MODELING_MOD_DIR) \
 -I$(MODULE_DIR)/$(SYNTHESIS_MOD_DIR) \
--I$(MODULE_DIR)/$(UTILITY_MOD_DIR) 
+-I$(MODULE_DIR)/$(UTILITY_MOD_DIR)
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -213,10 +190,10 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"
 CPPFLAGS = $(CFLAGS)
 CPPFLAGS += \
 -fno-exceptions \
--finline-functions 
+-finline-functions
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).a 
+all: $(BUILD_DIR)/$(TARGET).a lgpl
 
 #######################################
 # build the library
@@ -244,13 +221,21 @@ $(BUILD_DIR)/$(TARGET).a: $(OBJECTS) Makefile
 	$(AR) rcs $@ $(OBJECTS)
 
 $(BUILD_DIR):
-	mkdir $@        
+	mkdir $@
+
+# build the lgpl submodule if it exists
+lgpl:
+	@if [ -f $(DAISYSP_LGPL_DIR)/Makefile ]; then\
+		make -C $(DAISYSP_LGPL_DIR); \
+		echo "Building DaisySP-LGPL";\
+	fi
 
 #######################################
 # clean up
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
+	-rm -fR $(DAISYSP_LGPL_DIR)/build
 #######################################
 
 # dependencies

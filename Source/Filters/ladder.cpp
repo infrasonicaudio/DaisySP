@@ -75,7 +75,7 @@ float LadderFilter::Process(float in)
     float interp = 0.0f;
     for(size_t os = 0; os < kInterpolation; os++)
     {
-        float in_interp = (interp * oldinput_ + (1.0f - interp) * input);
+        float in_interp = (interp * input + (1.0f - interp) * oldinput_);
         float u      = in_interp - (z1_[3] - pbg_ * in_interp) * K_ * Qadjust_;
         u            = fast_tanh(u);
         float stage1 = LPF(u, 0);

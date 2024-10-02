@@ -158,23 +158,25 @@ void LadderFilter::compute_coeffs(float freq)
 float LadderFilter::weightedSumForCurrentMode(
     const std::array<float, 5>& stage_outs)
 {
+    const float y0 = stage_outs[0];
+    const float y1 = stage_outs[1];
+    const float y2 = stage_outs[2];
+    const float y3 = stage_outs[3];
+    const float y4 = stage_outs[4];
     // Weighted filter stage mixing to achieve selected response
     // as described in "Oscillator and Filter Algorithms for Virtual Analog Synthesis"
     // Välimäki and Huovilainen, Computer Music Journal, vol 60, 2006
     switch(mode_)
     {
-        case FilterMode::LP24: return stage_outs[4];
-        case FilterMode::LP12: return stage_outs[2];
-        case FilterMode::BP24:
-            return (stage_outs[2] + stage_outs[4]) * 4.0f
-                   - stage_outs[3] * 8.0f;
-        case FilterMode::BP12: return (stage_outs[1] - stage_outs[2]) * 2.0f;
-        case FilterMode::HP24:
-            return stage_outs[0] + stage_outs[4]
-                   - ((stage_outs[1] + stage_outs[3]) * 4.0f)
-                   + stage_outs[2] * 6.0f;
-        case FilterMode::HP12:
-            return stage_outs[0] + stage_outs[2] - stage_outs[1] * 2.0f;
+        case FilterMode::LP24: return y4;
+        case FilterMode::LP12: return y2;
+        case FilterMode::BP24: return (y2 + y4) * 4.0f - y3 * 8.0f;
+        case FilterMode::BP12: return (y1 - y2) * 2.0f;
+        case FilterMode::HP24: return y0 + y4 - ((y1 + y3) * 4.0f) + y2 * 6.0f;
+        case FilterMode::HP12: return y0 + y2 - y1 * 2.0f;
+        case FilterMode::Notch12: return y0 - 4.0f * y1 + 6.0f * y2 - 4.0f * y3;
+        case FilterMode::Notch24:
+            return y0 - 4.0f * y1 + 8.0f * y2 - 8.0f * y3 + 4.0f * y4;
         default: return 0.0f;
     }
 }

@@ -63,7 +63,9 @@ class LadderFilter
         BP24,
         BP12,
         HP24,
-        HP12
+        HP12,
+        Notch24,
+        Notch12
     };
 
     LadderFilter()  = default;

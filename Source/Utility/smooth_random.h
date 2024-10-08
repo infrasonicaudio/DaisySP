@@ -3,6 +3,7 @@
 #define DSY_SMOOTHRANDOM_H
 
 #include "dsp.h"
+#include "Noise/whitenoise.h"
 #include <stdint.h>
 #include <stdlib.h>
 #ifdef __cplusplus
@@ -11,10 +12,10 @@
 
 namespace daisysp
 {
-/**  
+/**
        @brief Smooth random generator for internal modulation. \n
-       @author Ported by Ben Sergentanis 
-       @date Jan 2021 
+       @author Ported by Ben Sergentanis
+       @date Jan 2021
        Ported from pichenettes/eurorack/plaits/dsp/noise/smooth_random_generator.h \n
        to an independent module. \n
        Original code written by Emilie Gillet in 2016. \n
@@ -31,6 +32,7 @@ class SmoothRandomGenerator
     void Init(float sample_rate)
     {
         sample_rate_ = sample_rate;
+        rng_.Init();
 
         SetFreq(1.f);
         phase_    = 0.0f;
@@ -46,7 +48,7 @@ class SmoothRandomGenerator
         {
             phase_ -= 1.0f;
             from_ += interval_;
-            interval_ = rand() * kRandFrac * 2.0f - 1.0f - from_;
+            interval_ = rng_.Process() - from_;
         }
         float t = phase_ * phase_ * (3.0f - 2.0f * phase_);
         return from_ + interval_ * t;
@@ -66,8 +68,9 @@ class SmoothRandomGenerator
     float phase_;
     float from_;
     float interval_;
-
     float sample_rate_;
+
+    WhiteNoise rng_;
 
     static constexpr float kRandFrac = 1.f / (float)RAND_MAX;
 };
